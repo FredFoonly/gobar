@@ -478,6 +478,7 @@ Options:
 	parser := NewTextParser()
 
 	stdin := make(chan []*TextPiece)
+	quitchan := make(chan struct{})
 	go func() {
 		defer close(stdin)
 		reader := bufio.NewReader(os.Stdin)
@@ -486,6 +487,8 @@ Options:
 			str, err := reader.ReadString('\n')
 			if err != nil {
 				log.Printf("Error reading stdin. Got `%s`", err)
+				quitchan <- struct{}{}
+				break
 			} else {
 				stdin <- parser.Scan(strings.NewReader(str))
 			}
@@ -499,6 +502,8 @@ Options:
 			<-pingAfter
 		case text := <-stdin:
 			bar.Draw(text)
+		case <-quitchan:
+			return
 		case <-pingQuit:
 			return
 		}
