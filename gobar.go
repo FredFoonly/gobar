@@ -161,10 +161,17 @@ type Geometry struct {
 func NewGeometry(geostr string, head xrect.Rect, position Position) *Geometry {
 	geometry := Geometry{}
 	var widthS string
+	var widthI int
 	_, err := fmt.Sscanf(
-		geostr, "%1sx%d+%d+%d",
-		&widthS, &geometry.Height, &geometry.X, &geometry.Y,
-	)
+		geostr, "%dx%d+%d+%d",
+		&widthI, &geometry.Height, &geometry.X, &geometry.Y)
+	if err == nil {
+		widthS = strconv.Itoa(widthI)
+	} else {
+		_, err = fmt.Sscanf(
+			geostr, "%1sx%d+%d+%d",
+			&widthS, &geometry.Height, &geometry.X, &geometry.Y)
+	}
 
 	geometry.X += uint16(head.X())
 
