@@ -33,7 +33,7 @@ import (
 	"strconv"
 	"strings"
 
-	"code.google.com/p/jamslam-freetype-go/freetype/truetype"
+	"github.com/BurntSushi/freetype-go/freetype/truetype"
 
 	"github.com/BurntSushi/xgbutil"
 	"github.com/BurntSushi/xgbutil/ewmh"
@@ -319,7 +319,7 @@ func (self *Bar) Draw(text []*TextPiece) {
 
 			subimg := imgs[screen].SubImage(image.Rect(
 				xs, 0, xs+width, int(self.Geometries[screen].Height),
-			))
+			)).(*xgraphics.Image)
 			if subimg == nil {
 				log.Printf(
 					"Cannot create Subimage for coords `%dx%dx%dx%d`\n",
